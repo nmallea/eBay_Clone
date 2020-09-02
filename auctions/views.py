@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from .models import User
 
-
+@login_required(login_url='login')
 def index(request):
     return render(request, "auctions/index.html")
 
@@ -61,3 +61,12 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+@login_required(login_url='login')
+def new_listing(request, listing_id):
+
+@login_required(login_url='login')
+def listing(request, listing_id):
+
+@login_required(login_url='login')
+def bidding(request, listing_id):
