@@ -14,7 +14,7 @@ class Categories(models.Model):
 class ListingPage(models.Model):
     user = models.CharField(max_length=64)
     title = models.CharField(max_length=64)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=600)
     startbids = models.IntegerField()
     imageurl = models.URLField(max_length=200)
     category = models.ForeignKey(Categories, blank=True, null=True, on_delete=models.CASCADE, related_name='listingtype')
@@ -29,3 +29,4 @@ class Biddings(models.Model):
 
     def __str__(self):
         return f"Bidding no. {self.id}: {self.bidder} bid {self.bidding} for {self.item_id}"
+

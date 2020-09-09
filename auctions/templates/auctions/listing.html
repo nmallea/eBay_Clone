@@ -1,0 +1,34 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>No {{ listing.id }}: {{ listing.title }}</h1>
+
+    <ul>
+        <img src="{{ listing.imageurl }}" alt="item image">
+        <li>Listed by: {{ listing.user }}</li>
+        <li>Description: {{ listing.description }}</li>
+        <li>Start price: {{ listing.startbids }} USD</li>
+        <li>Category: {{ listing.category }}</li>
+    </ul>
+    {% if numofbids > 0 %}
+    <p>There are currently {{ numofbids }} bids.</p>
+        {% for bidding in biddings %}
+            {% if bidding.bidder == user %}
+            <p>You bid {{ bidding.bidding }} usd for this listing.</p>
+            <hr>
+            {% else %}
+            <p>{{ bidding.bidder }} bid {{ bidding.bidding }} usd for this listing</p>
+            <hr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+    <p>No bidding yet</p>
+    {% endif %}
+
+    <form action="{% url 'bidding' listing.id %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit">
+    </form>
+        
+{% endblock %}
