@@ -1,30 +1,43 @@
 {% extends "auctions/layout.html" %}
 
+{% block five %} active {% endblock %}
+
 {% block body %}
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h2>Register for an Auction House account.</h2>
 
-    <h2>Register</h2>
+                {% if message %}
+                    <div>{{ message }}</div>
+                {% endif %}
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+                <form class="mb-3" action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="first_name" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="last_name" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="email" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Register">
+                </form>
 
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+                Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+            </div>
         </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    </div>
 
 {% endblock %}

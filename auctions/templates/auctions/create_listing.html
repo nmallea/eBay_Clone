@@ -1,0 +1,53 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %}
+    Create
+{% endblock %}
+
+{% block three %} active {% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row my-3 justify-content-center">
+        <div class="col-lg-6">
+            {% include 'auctions/message.html' %}
+            <form action="{% url 'create_listing' %}" method="POST" autocomplete="off">
+                {% csrf_token %}
+                <small class="text-muted"><strong>Listing Title</strong></small>
+                <div class="input-group mb-3">
+                    {{ form.title }}
+                </div>
+
+                <small class="text-muted"><strong>Category</strong></small>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    </div>
+                    {{ form.category }}
+                </div>
+
+                <small class="text-muted"><strong>Starting bid</strong></small>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01">$</label>
+                    </div>
+                      {{ form.min_bid }}
+                      <div class="input-group-append">
+                    </div>
+                </div>
+
+                <small class="text-muted"><strong>Description</strong></small>
+                <div class="input-group mb-3">
+                    {{ form.description}}
+                </div>
+
+                <small class="text-muted"><strong>Image URL</strong></small>
+                <div class="input-group mb-3">
+                    {{ form.image_url }}
+                </div>
+
+                <button type="submit" class="btn btn-block btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+  </div>
+{% endblock %}

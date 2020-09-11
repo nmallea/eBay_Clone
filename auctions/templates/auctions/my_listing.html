@@ -1,58 +1,57 @@
-{% extends "auctions/layout.html" %}
-
+{% extends 'auctions/layout.html' %}
+{% block title %}
+    My Listings
+{% endblock %}
 {% load static %}
-
-{% block one %} active {% endblock %}
-
 {% block body %}
     <div class="container mt-5">
         <div class="row">
             {% include 'auctions/message.html'%}
-            {% for item in listing %}
-                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% for listing in listings %}
+                <div class="col-lg-4 col-md-6 col-xs-12 mb-4">
                     <div class="card h-100">
-                        {% if item.image_url %}
-                            <a href="{% url 'listing' item.id %}">
-                                <img height="300px" class="card-img-top p-3" src="{{ item.image_url }}" alt="{{ item.title }}">
+                        {% if listing.image_url %}
+                            <a href="{% url 'listing' listing.id %}">
+                                <img height="300px" class="card-img-top p-3" src="{{ listing.image_url }}" alt="{{ listing.title }}">
                             </a>
                         {% endif %}
                         <div class="card-body" style="min-width: 18rem">
-                            <h4 class="card-text text-info">{{ item.title }}</h4>
+                            <h4 class="card-text text-info">{{ listing.title }}</h4>
                             Current Price:
                             <span class="text-success ">
-                                {% if item.top_bid is not None %}
-                                    <strong>${{ item.top_bid.bid }}.00</strong>
+                                {% if listing.top_bid is not None %}
+                                    <b>${{ listing.top_bid.bid }}.00</b>
                                 {% else %}
-                                    ${{ item.min_bid }}
+                                    ${{ listing.min_bid }}
                                 {% endif %}
                             </span> <br>
-                            <span>Starting Price: ${{ item.min_bid }}</span><br>
-                            <small class="text-muted">Category: {{ item.get_category_display }}, created {{ item.timestamp }} by {{ item.owner }}</small>
-                            <div class="card-text mb-3" id="overflow" style="height: 100px;"><small>{{ item.description |safe }}</small></div>
+                            <span>Starting Price: ${{ listing.min_bid }}</span><br>
+                            <small class="text-muted">Category: {{ listing.get_category_display }}, created {{ listing.timestamp }} by {{ listing.owner }}</small>
+                            <div class="card-text mb-3" id="overflow" style="height: 100px;"><small>{{ listing.description |safe }}</small></div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     {% if '/listing' not in request.path %}
-                                        <a href="{% url 'listing' item.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+                                        <a href="{% url 'listing' listing.id %}" class="btn btn-sm btn-outline-secondary">View</a>
                                     {% endif %}
                                     {% if request.user.is_authenticated %}
-                                        {% if item in watchlist or watchlist_flag is not None %}
+                                        {% if listing in watchlist or watchlist_flag is not None %}
                                             <form method="post" action="{% url 'remove_watchlist' %}">
                                                 {% csrf_token %}
-                                                <input type="hidden" name="listing_id" value="{{ item.id }}"/>
+                                                <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
                                                 <button type="submit" class="btn btn-info btn-sm ml-1"><i class="fa fa-eye" aria-hidden="true"></i>
                                                     <span>Remove Watchlist</span></button>
                                             </form>
                                         {% else %}
                                             <form method="post" action="{% url 'add_watchlist' %}">
                                                 {% csrf_token %}
-                                                <input type="hidden" name="listing_id" value="{{ item.id }}"/>
+                                                <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
                                                 <button type="submit"
                                                         class="btn btn-sm btn-outline-secondary ml-1">Add Watchlist
                                                 </button>
                                             </form>
                                         {% endif %}
-                                        {% if item.status == item.CLOSED %}
-                                            <a href="{% url 'listing' item.id %}" class="btn btn-warning btn-sm ml-1">
+                                        {% if listing.status == listing.CLOSED %}
+                                            <a href="{% url 'listing' listing.id %}" class="btn btn-warning btn-sm ml-1">
                                                 <strong class="mr-2 ml-2">Closed</strong>
                                             </a>
                                         {% endif %}
