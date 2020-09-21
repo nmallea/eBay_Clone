@@ -1,8 +1,7 @@
 from django import forms
 from django.forms import ModelForm, Textarea, Select, TextInput, \
-    NumberInput, PasswordInput
-
-from .models import *
+  NumberInput, PasswordInput
+from .models import User, Listing, Bid, Comment
 
 class ListingForm(ModelForm):
     class Meta:
@@ -12,7 +11,7 @@ class ListingForm(ModelForm):
             'title': TextInput(attrs={
                 'class': 'form-control mb-2', 'placeholder': 'Required - 64 characters maximum'
             }),
-            'category': Select(choices=Listing.CATEGORY_CHOICES, attrs={
+            'category': Select(choices=Listing.category_options, attrs={
                 'class': 'form-control', 'id': 'inputGroupSelect01'
             }),
             'min_bid': NumberInput(attrs={
@@ -86,3 +85,5 @@ class CommentForm(ModelForm):
                 'placeholder': 'Your Message'
             })
         }
+
+

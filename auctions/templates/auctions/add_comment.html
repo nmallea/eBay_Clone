@@ -1,34 +1,38 @@
 <div class="col-lg-4 col-md-12 my-4">
-    <div class="card">
-        <div class="card-header">
-        <h3 class="text-dark m-0">Questions? Comments?</h3>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <form method="post" action="{% url 'add_comment' %}" autocomplete="off">
+	<div class="card">
+		<div class="card-header">
+			<h3 class="text-dark m-0">Questions? Comments?</h3>
+		</div>
+		<div class="card-body">
+			<div class="form-group">
+				<form method="post" action="{% url 'add_comment' %}" autocomplete="off">
                     {% csrf_token %}
                     {% if user.is_authenticated %}
-                        <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
-                        <div class="input-group mb-3">
+
+					<input type="hidden" name="listing_id" value="{{ listing.id }}"/>
+					<div class="input-group mb-3">
                             {{ cmt_form.title }}
                         </div>
-
-                        <div class="input-group mb-3">
+					<div class="input-group mb-3">
                             {{ cmt_form.message}}
                         </div>
-                        <div class="text-right">
-                            <button type="submit" class="btn text btn-primary">Ask Question</button>
-                        </div>
+					<div class="text-right">
+						<button type="submit" class="btn text btn-primary">Ask Question</button>
+					</div>
                     {% else %}
-                        <div class="ml-1">
-                            Please <a href="{% url 'login' %}">Login</a> to as seller a question.
-                            <button type="button" class="btn btn-secondary ml-2" disabled>
-                                <strong>Submit Question</strong>
-                            </button>
-                        </div>
+
+					<div class="ml-1">
+                            Please
+						<a href="{% url 'login' %}">Login</a> to as seller a question.
+
+						<button type="button" class="btn btn-secondary ml-2" disabled>
+							<strong>Submit Question</strong>
+						</button>
+					</div>
                     {% endif %}
-                </form>
-            </div>
-        </div>
-    </div>
+
+				</form>
+			</div>
+		</div>
+	</div>
 </div>

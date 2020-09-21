@@ -7,13 +7,11 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from . import models
-from .forms import ListingForm, BidForm, CommentForm
-from .models import User, Listing, Bid, Comment
-
+from . models import User, Listing, Bid, Comment
+from . forms import ListingForm, BidForm, CommentForm
 
 def index(request):
-    listing = Listing.objects.all().filter(status=Listing.ACTIVE).order_by('-listing_date')
+    listing = Listing.objects.all().filter(status=Listing.active).order_by('-listing_date')
     if request.user.is_authenticated:
         user_watch = User.objects.get(pk=int(request.user.id)).watchlist.all()
         return render(request, "auctions/index.html", {
@@ -39,15 +37,12 @@ def create_listing(request):
                                      "We were unable to add the listing.")
                 return render(request, "auctions/create_listing.html",
                               {"form": form})
-            # Successfully created a Listing
             messages.add_message(request, messages.SUCCESS,
                                  "Success! Your listing has been created.")
             return HttpResponseRedirect(reverse("index"))
-        # Form is not valid
         messages.add_message(request, messages.WARNING,
                              "Something went wrong. Please try again.")
         return render(request, "auctions/create_listing.html", {"form": form})
-    # Default is to render the create_listing form
     return render(request, 'auctions/create_listing.html', {
         "form": ListingForm()
     })
@@ -103,7 +98,7 @@ def watchlist(request, user_id):
     return render(request, "auctions/all_listing.html", {
         "listings": user_watchlist,
         "watchlist": user_watchlist,
-        "category": Listing.CATEGORY_CHOICES
+        "category": Listing.category_options
     })
 
 @require_http_methods(["POST"])
@@ -156,14 +151,14 @@ def place_bid(request):
             new_bid.save()
         except IntegrityError:
             messages.add_message(request, messages.WARNING,
-                                 "We were unable to place your bid.")
+                                 "We were unable to process your bid. Make sure your bid is higher than current bid.")
             return HttpResponseRedirect(
                 reverse("listing", args=(bid_listing.id,)))
         messages.add_message(request, messages.SUCCESS,
                              "Your bid was successful.")
         return HttpResponseRedirect(reverse("listing", args=(bid_listing.id,)))
     messages.add_message(request, messages.WARNING,
-                         "We were unable to process your bid.")
+                         "We were unable to process your bid. Make sure your bid is higher than current bid.")
     list_args = {"bid_form": form,
                  "cmt_form": None,
                  "listing_id": request.POST["listing_id"],
@@ -212,7 +207,7 @@ def add_comment(request):
 def close_listing(request):
     try:
         status_listing = Listing.objects.get(pk=int(request.POST["listing_id"]))
-        status_listing.status = Listing.CLOSED
+        status_listing.status = Listing.closed
         status_listing.save()
     except Listing.DoesNotExist:
         raise Http404("Listiing not found")
@@ -231,7 +226,7 @@ def my_listing(request):
     return render(request, "auctions/my_listing.html", {
         "listings": my_listing,
         "watchlist": user_watch,
-        "category": Listing.CATEGORY_CHOICES
+        "category": Listing.category_options
     })
 
 def all_listing(request):
@@ -244,29 +239,26 @@ def all_listing(request):
         return render(request, "auctions/all_listing.html", {
             "listings": all_listing,
             "watchlist": user_watch,
-            "category": Listing.CATEGORY_CHOICES
+            "category": Listing.category_options
         })
     return render(request, "auctions/all_listing.html", {
         "listings": all_listing,
-        "category": Listing.CATEGORY_CHOICES
+        "category": Listing.category_options
     })
 
 def category_sort(request, category):
-    listing = Listing.objects.all().filter(category=category, status=Listing.ACTIVE).order_by('-listing_date')
+    listing = Listing.objects.all().filter(category=category, status=Listing.active).order_by('-listing_date')
     return render(request, 'auctions/all_listing.html', {
         "listings": listing,
-        "category": Listing.CATEGORY_CHOICES
+        "category": Listing.category_options
     })
 
 def login_view(request):
     if request.method == "POST":
-
-        # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
 
-        # Check if authentication successful
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
@@ -289,16 +281,12 @@ def register(request):
         email = request.POST["email"]
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
-
-        # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
             user.save()

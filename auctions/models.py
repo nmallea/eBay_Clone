@@ -12,44 +12,44 @@ class User(AbstractUser):
     )
 
 class Listing(models.Model):
-    ACTIVE = "A"
-    CLOSED = "C"
+    active = "A"
+    closed = "C"
 
-    MEDIA = "M"
-    SPORTS = "S"
-    CLOTHING = "C"
-    HOUSEHOLD = "H"
-    VEHICLES = "V"
-    PETS = "P"
-    ANTIQUES = "A"
+    media = "M"
+    sports = "S"
+    clothing = "C"
+    household = "H"
+    vehicles = "V"
+    pets = "P"
+    antiques = "A"
 
-    CATEGORY_CHOICES = [
-        (MEDIA, "Electronics & Games"),
-        (SPORTS, "Sport & Recreation"),
-        (CLOTHING, "Clothing & Accessories"),
-        (HOUSEHOLD, "Home & Garden"),
-        (VEHICLES, "Cars & Trucks"),
-        (PETS, "Pets & Accessories"),
-        (ANTIQUES, "Antiques & Rare"),
+    category_options = [
+        (media, "Electronics & Games"),
+        (sports, "Sport & Recreation"),
+        (clothing, "Clothing & Accessories"),
+        (household, "Home & Garden"),
+        (vehicles, "Cars & Trucks"),
+        (pets, "Pets & Accessories"),
+        (antiques, "Antiques & Rare"),
     ]
 
-    STATUS = [
-        (ACTIVE, "Active"),
-        (CLOSED, "Closed")
+    status = [
+        (active, "active"),
+        (closed, "closed")
     ]
 
     title = models.CharField(max_length=64)
-    category = models.CharField(max_length=1, choices=CATEGORY_CHOICES, default=MEDIA)
+    category = models.CharField(max_length=1, choices=category_options, default=media)
     min_bid = models.DecimalField(
         max_digits=7, decimal_places=2, default=0,
         validators=[MinValueValidator(1, message="Bid must be $1 or greater")]
         )
-    description = models.TextField(max_length=1000)
-    image_url = models.URLField(max_length=300, blank=True)
+    description = models.TextField(max_length=1005)
+    image_url = models.URLField(max_length=305, blank=True)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="listing_owner"
         )
-    status = models.CharField(max_length=1, choices=STATUS, default=ACTIVE)
+    status = models.CharField(max_length=1, choices=status, default=active)
     listing_date = models.DateTimeField(auto_now=True)
 
     def timestamp(self):
@@ -83,7 +83,6 @@ class Listing(models.Model):
             else:
                 return str(hours) + " hours ago"
 
-        # 1 day to 30 days
         if diff.days >= 1 and diff.days < 30:
             days= diff.days
 
@@ -113,7 +112,7 @@ class Listing(models.Model):
                 return str(years) + " years ago"
 
     def __str__(self):
-        return f"{self.title} ({self.owner.username})"
+        return '{0} ({1})'.format(self.title, self.owner.username)
 
     def top_bid(self):
         try:
@@ -143,7 +142,7 @@ class Bid(models.Model):
     bid_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.bid}"
+        return '{0} ({1})'.format(self.bid)
 
     def timestamp(self):
         now = timezone.now()
@@ -176,7 +175,6 @@ class Bid(models.Model):
             else:
                 return str(hours) + " hours ago"
 
-        # 1 day to 30 days
         if diff.days >= 1 and diff.days < 30:
             days= diff.days
 
@@ -216,4 +214,4 @@ class Comment(models.Model):
         ordering = ['cmt_date']
 
     def __str__(self):
-        return f"{self.title}, {self.owner.username}"
+        return '{0} ({1})'.format(self.title, self.owner.username)

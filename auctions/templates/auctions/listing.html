@@ -6,130 +6,173 @@
 {% load static %}
 {% block body %}
     {% include 'auctions/message.html' %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-8 col-md-12">
-                <div class="card p-3 m-3 w-100 mx-auto">
-                    <div class="row no-gutters">
-                        <div class="col-md-4 col-sm-12 p-3">
-                            <img src="{{ listing.image_url }}" class="card-img" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h3 class="card-title text-info">
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-8 col-md-12">
+			<div class="card p-3 m-3 w-100 mx-auto">
+				<div class="row no-gutters">
+					<div class="col-md-4 col-sm-12 p-3">
+						<img src="{{ listing.image_url }}" class="card-img" alt="...">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h3 class="card-title text-info">
                                     {{ listing.title }}
                                 </h3>
-                                <div class="btn-group mb-3">
+								<div class="btn-group mb-3">
                                     {% if request.user.is_authenticated %}
                                         {% if listing in watchlist or watchlist_flag is not None %}
-                                            <form method="post" action="{% url 'remove_watchlist' %}">
+
+									<form method="post" action="{% url 'remove_watchlist' %}">
                                                 {% csrf_token %}
-                                                <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
-                                                <button type="submit" class="btn btn-info btn-sm mr-3"><i class="fa fa-eye fa-lg" aria-hidden="true"></i>
-                                                    <span>Remove Watchlist</span>
-                                                </button>
-                                            </form>
+
+										<input type="hidden" name="listing_id" value="{{ listing.id }}"/>
+										<button type="submit" class="btn btn-info btn-sm mr-3">
+											<i class="fa fa-eye fa-lg" aria-hidden="true"></i>
+											<span>Remove Watchlist</span>
+										</button>
+									</form>
                                         {% else %}
-                                            <form method="post" action="{% url 'add_watchlist' %}">
+
+									<form method="post" action="{% url 'add_watchlist' %}">
                                                 {% csrf_token %}
-                                                <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
-                                                <button type="submit"
+
+										<input type="hidden" name="listing_id" value="{{ listing.id }}"/>
+										<button type="submit"
                                                         class="btn btn-sm btn-outline-secondary mr-3">Add Watchlist
                                                 </button>
-                                            </form>
+									</form>
                                         {% endif %}
-                                        {% if user.id == listing.owner.id and listing.status != listing.CLOSED %}
-                                            <form method="post" action="{% url 'close_listing' %}">
-                                                {% csrf_token %}
-                                                <button class="btn btn-warning btn-sm" type="submit">
-                                                    <strong class="mr-2 ml-2">Close Auction</strong>
-                                                </button>
-                                                <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
-                                            </form>
-                                        {% endif %}
-                                        {% if listing.status == listing.CLOSED %}   <!-- Closed listing indicator  -->
-                                            <button type="button" class="btn btn-warning btn-sm px-3" disabled>Closed</button>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
+                                        {% if user.id == listing.owner.id and listing.status != listing.closed %}
 
-                                <div class="mb-3">(View&nbsp;<a href="#comments">Comments</a>&nbsp;on this listing)</div>
-                                {% if listing.status == listing.CLOSED %}
-                                    {% if listing.top_bid.owner.id == request.user.id %}
-                                        <p class="card-text">
-                                            Well done!! You won this auction <strong>{{ listing.top_bid.owner.first_name }}</strong>
-                                        </p>
+									<form method="post" action="{% url 'close_listing' %}">
+                                                {% csrf_token %}
+
+										<button class="btn btn-warning btn-sm" type="submit">
+											<strong class="mr-2 ml-2">Close Auction</strong>
+										</button>
+										<input type="hidden" name="listing_id" value="{{ listing.id }}"/>
+									</form>
+                                        {% endif %}
+                                        {% if listing.status == listing.closed %}
+									<!-- closed listing indicator  -->
+									<button type="button" class="btn btn-warning btn-sm px-3" disabled>closed</button>
+                                        {% endif %}
                                     {% endif %}
-                                    <p class="card-text text-danger"><strong>CLOSED</strong></p>
-                                    <p class="card-text">
-                                        <span class="text-success">Final Price: ${{ listing.top_bid.bid|floatformat }}</span>
-                                    </p>
+
+								</div>
+								<div class="mb-3">(View&nbsp;
+									<a href="#comments">Comments</a>&nbsp;on this listing)
+								</div>
+                                {% if listing.status == listing.closed %}
+                                    {% if listing.top_bid.owner.id == request.user.id %}
+
+								<p class="card-text">
+                                            Well done!! You won this auction
+									<strong>{{ listing.top_bid.owner.first_name }}</strong>
+								</p>
+                                    {% endif %}
+
+								<p class="card-text text-danger">
+									<strong>closed</strong>
+								</p>
+								<p class="card-text">
+									<span class="text-success">Final Price: ${{ listing.top_bid.bid|floatformat }}</span>
+								</p>
                                 {% else %}
-                                    <p class="card-text">Current Price:
-                                    <span class="text-success ">
+
+								<p class="card-text">Current Price:
+
+									<span class="text-success ">
                                         {% if listing.top_bid %}
-                                            <b>${{ listing.top_bid.bid|floatformat }}</b> from {{ listing.top_bid.owner }}<small class="text-muted">, {{ listing.top_bid.timestamp }}</small>
+
+										<b>${{ listing.top_bid.bid|floatformat }}</b> from {{ listing.top_bid.owner }}
+										<small class="text-muted">, {{ listing.top_bid.timestamp }}</small>
                                         {% else %}
                                             No bids
                                         {% endif %}
-                                    </span>
-                                    <p class="card-text">Starting Price: ${{ listing.min_bid }}</p>
+
+									</span>
+									<p class="card-text">Starting Price: ${{ listing.min_bid }}</p>
                                 {% endif %}
-                                <p class="card-text">{{ listing.description }}</p>
-                                <p class="card-text"><small class="text-muted">Created {{ listing.timestamp }} by {{ listing.owner }}</small></p>
-                            </div>
-                            {% if listing.status != listing.CLOSED %}
-                                <form class="ml-3" method="post" action="{% url 'place_bid' %}" style="width: 20rem;">
+
+									<p class="card-text">{{ listing.description }}</p>
+									<p class="card-text">
+										<small class="text-muted">Created {{ listing.timestamp }} by {{ listing.owner }}</small>
+									</p>
+								</div>
+                            {% if listing.status != listing.closed %}
+
+								<form class="ml-3" method="post" action="{% url 'place_bid' %}" style="width: 20rem;">
                                     {% csrf_token %}
                                     {% if user.is_authenticated %}
-                                        <small class="text-muted"><strong>{{ bids }} bid(s) so far.</strong></small>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                            <label class="input-group-text" for="inputGroupSelect01">$</label>
-                                            </div>
+
+									<small class="text-muted">
+										<strong>{{ bids }} bid(s) so far.</strong>
+									</small>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<label class="input-group-text" for="inputGroupSelect01">$</label>
+										</div>
                                             {{ bid_form.bid }}
-                                            <div class="input-group-append">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="listing_id" value="{{ listing.id }}"/>
-                                        <button type="submit" class="btn btn-success">
-                                            <strong>$ Place Your Bid</strong>
-                                        </button>
+
+										<div class="input-group-append"></div>
+									</div>
+									<input type="hidden" name="listing_id" value="{{ listing.id }}"/>
+									<button type="submit" class="btn btn-success">
+										<strong>$ Place Your Bid</strong>
+									</button>
                                     {% else %}
-                                        <div class="ml-1">
-                                            Please <a href="{% url 'login' %}">Login</a> to bid
-                                            <button type="button" class="btn btn-secondary ml-2" disabled>
-                                                <strong>$ Place Your Bid</strong>
-                                            </button>
-                                        </div>
+
+									<div class="ml-1">
+                                            Please
+										<a href="{% url 'login' %}">Login</a> to bid
+
+										<button type="button" class="btn btn-secondary ml-2" disabled>
+											<strong>$ Place Your Bid</strong>
+										</button>
+									</div>
                                     {% endif %}
-                                </form>
+
+								</form>
                             {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% if listing.status != listing.CLOSED %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+        {% if listing.status != listing.closed %}
             {% include 'auctions/add_comment.html' %}
         {% endif %}
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header mb-3">
-                        <h3 id="comments">Have a question? Ask the seller. <small>{{ comment_count }} Question(s)</small> </h3>
-                    </div>
+
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="card">
+						<div class="card-header mb-3">
+							<h3 id="comments">Have a question? Ask the seller.
+								<small>{{ comment_count }} Question(s)</small>
+							</h3>
+						</div>
                     {% for comment in comments %}
-                        <div class="card-body py-0">
-                            <i class="fa fa-user-circle-o float-left pt-1 pr-1" aria-hidden="true"></i>
-                            <h5 class="card-title">{{ comment.owner.first_name }}&nbsp;{{ comment.owner.last_name }}</h5>
-                            <p class="card-text mb-0"><b>{{ comment.title }}</b> => {{ comment.message }}</p>
-                            <p class="card-text mt-0"><small class="text-muted">Posted on {{ comment.cmt_date }} in {{ comment.listing.get_category_display }} category</small></p>
-                        </div> <hr>
+
+						<div class="card-body py-0">
+							<i class="fa fa-user-circle-o float-left pt-1 pr-1" aria-hidden="true"></i>
+							<h5 class="card-title">{{ comment.owner.first_name }}&nbsp;{{ comment.owner.last_name }}</h5>
+							<p class="card-text mb-0">
+								<b>{{ comment.title }}</b> => {{ comment.message }}
+							</p>
+							<p class="card-text mt-0">
+								<small class="text-muted">Posted on {{ comment.cmt_date }} in {{ comment.listing.get_category_display }} category</small>
+							</p>
+						</div>
+						<hr>
                     {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 {% endblock %}

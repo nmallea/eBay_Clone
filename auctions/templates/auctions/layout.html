@@ -1,77 +1,82 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Auction House{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital@1&display=swap" rel="stylesheet">
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
-    </head>
-    <body class="bg-light">
-      <nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-          <a class="navbar-brand" href="{% url 'index' %}">
-            <strong id="auctions" style="font-size: 30px">Auction House</strong>
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>{% block title %}Auction House{% endblock %}</title>
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+				<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+					<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital@1&display=swap" rel="stylesheet">
+						<link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+						</head>
+						<body class="bg-light">
+							<nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-primary">
+								<div class="container">
+									<a class="navbar-brand" href="{% url 'index' %}">
+										<strong id="auctions" style="font-size: 30px">Auction House</strong>
+									</a>
+									<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
             aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item {% block one %} {% endblock %} ">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-              </li>
-              <li class="nav-item {% block two %} {% endblock %}">
-                <a class="nav-link" href="{% url 'all_listing' %}">All Listings</a>
-              </li>
+										<span class="navbar-toggler-icon"></span>
+									</button>
+									<div class="collapse navbar-collapse" id="navbarSupportedContent-333">
+										<ul class="navbar-nav mr-auto">
+											<li class="nav-item {% block two %} {% endblock %}">
+												<a class="nav-link" href="{% url 'all_listing' %}">All Listings</a>
+											</li>
               {% if user.is_authenticated %}
-                <li class="nav-item {% block three %} {% endblock %}">
-                    <a class="nav-link" href="{% url 'create_listing' %}">Create Listing</a>
-                </li>
+
+											<li class="nav-item {% block three %} {% endblock %}">
+												<a class="nav-link" href="{% url 'create_listing' %}">Create Listing</a>
+											</li>
               {% else %}
-                <li class="nav-item">
-                  <a class="nav-link {% block five %} {% endblock %}" href="{% url 'register' %}">Register</a>
-                </li>
+
+											<li class="nav-item">
+												<a class="nav-link {% block five %} {% endblock %}" href="{% url 'register' %}">Register</a>
+											</li>
               {% endif %}
-            </ul>
-            <ul class="navbar-nav ml-auto nav-flex-icons">
+
+										</ul>
+										<ul class="navbar-nav ml-auto nav-flex-icons">
               {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <strong>{{ user.first_name }}</strong>
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right dropdown-default"
+
+											<li class="nav-item dropdown">
+												<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+													<strong>{{ user.first_name }}</strong>
+													<i class="fa fa-user" aria-hidden="true"></i>
+												</a>
+												<div class="dropdown-menu dropdown-menu-right dropdown-default"
                     aria-labelledby="navbarDropdownMenuLink-333">
-                    <a class="dropdown-item" href="{% url 'watchlist' request.user.id %}">My Watchlist</a>
-                    <a class="dropdown-item" href="{% url 'my_listing' %}">My Listings</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
-                  </div>
-                </li>
+													<a class="dropdown-item" href="{% url 'watchlist' request.user.id %}">My Watchlist</a>
+													<a class="dropdown-item" href="{% url 'my_listing' %}">My Listings</a>
+													<div class="dropdown-divider"></div>
+													<a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+												</div>
+											</li>
               {% else %}
-              <li class="nav-item">
-                <a class="nav-link {% block four %} {% endblock %}" href="{% url 'login' %}">Log In</a>
-              </li>
+
+											<li class="nav-item">
+												<a class="nav-link {% block four %} {% endblock %}" href="{% url 'login' %}">Log In</a>
+											</li>
               {% endif %}
-            </ul>
-          </div>
-        </div>
-      </nav>
+
+										</ul>
+									</div>
+								</div>
+							</nav>
       {% block body %}
       {% endblock %}
-        <!-- Scripts -->
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+
+							<!-- Scripts -->
+							<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+							<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
+							<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-
-    </body>
-</html>
+						</body>
+					</html>
